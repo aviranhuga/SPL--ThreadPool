@@ -1,89 +1,15 @@
 package bgu.spl.a2;
 
-import bgu.spl.a2.sim.actions.AddStudent;
-import bgu.spl.a2.sim.actions.OpenANewCourse;
-import bgu.spl.a2.sim.actions.ParticipatingInCourse;
+import bgu.spl.a2.sim.actions.*;
 import bgu.spl.a2.sim.privateStates.CoursePrivateState;
 import bgu.spl.a2.sim.privateStates.StudentPrivateState;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by Lenovo on 12/9/2017.
  */
-class confirmation extends Action{
-    String clientA;
-    String clientB;
-    String bankB;
-    PrivateState bankState;
-
-    public confirmation(String clientA,String clientB,String bankB,PrivateState bankState){
-        this.clientA = clientA;
-        this.clientB =clientB;
-        this.bankB =bankB;
-        this.bankState =bankState;
-        Result = new Promise<Boolean>();
-        this.setActionName("Confirmation");
-    }
-    @Override
-    protected void start() {
-        Result.resolve(true);//just for test lets say the other bank always approve the transaction
-    }
-}
-
-
-
-class Transmission extends Action{
-    int amount;
-    String clientA;
-    String clientB;
-    String bankA;
-    String bankB;
-    PrivateState bankState;
-    VersionMonitor vm ;
-    public Transmission(int amount,String clientA,String clientB,String bankA,String bankB,PrivateState bankState){
-        this.amount = amount;
-        this.clientA =clientA;
-        this.clientB = clientB;
-        this.bankA =bankA;
-        this.bankB =bankB;
-        this.bankState =bankState;
-        vm = new VersionMonitor();
-        Result = new Promise<String>();
-        this.setActionName("Transmission");
-    }
-
-    public VersionMonitor getVm(){
-        return vm;
-    }
-    protected void start(){
-        System.out.println("Start Transmission");
-
-        List<Action<Boolean>> actions = new ArrayList<>();
-        Action<Boolean> confAction1 = new confirmation(clientA,clientB,bankB,new PrivateState() {});
-        Action<Boolean> confAction = new confirmation(clientA,clientB,bankB,new PrivateState() {});
-        actions.add(confAction);
-        actions.add(confAction1);
-        sendMessage(confAction1, bankB, new PrivateState() {});
-        sendMessage(confAction, bankB, new PrivateState() {});
-        then(actions,()->{
-            Boolean result = actions.get(0).getResult().get();
-            if(result==true){
-                complete("transmission good");
-                System.out.println("transmission good");
-            }
-            else{
-                complete("transmission bad");
-                System.out.println("transmission bad");
-            }
-        });
-
-    }
-
-}
 
 public class BankTest {
 
@@ -107,6 +33,10 @@ public class BankTest {
             pre.add("DataStructers");
             Action<Boolean> OpenCourse2 = new OpenANewCourse("System Programing",10,pre,"CS");
 
+            Action<Boolean> unregister0 = new Unregister("Dor","DataStructers");
+
+            Action<Boolean> CloseCourse = new CloseACourse("Linear Algebra","Math");
+
             pool.submit(AddStudent0,"Tom",new StudentPrivateState());
             pool.submit(AddStudent1,"Dor",new StudentPrivateState());
             pool.submit(AddStudent2,"Amit",new StudentPrivateState());
@@ -122,10 +52,12 @@ public class BankTest {
             pool.submit(PartInCourse1,"Dor",new StudentPrivateState());
             pool.submit(PartInCourse2,"Amit",new StudentPrivateState());
 
+            pool.submit(unregister0,"Dor",new StudentPrivateState());
+
+            pool.submit(CloseCourse,"Linear Algebra", new CoursePrivateState());
 
 
-
-            CountDownLatch l = new CountDownLatch(10);
+            CountDownLatch l = new CountDownLatch(12);
             OpenCourse0.getResult().subscribe(() -> l.countDown());
             OpenCourse1.getResult().subscribe(() -> l.countDown());
             OpenCourse2.getResult().subscribe(() -> l.countDown());
@@ -136,7 +68,9 @@ public class BankTest {
             PartInCourse1.getResult().subscribe(()-> l.countDown());
             PartInCourse2.getResult().subscribe(()-> l.countDown());
             PartInCourse3.getResult().subscribe(()-> l.countDown());
-            try {
+            unregister0.getResult().subscribe(()-> l.countDown());
+            CloseCourse.getResult().subscribe(()->l.countDown());
+                try {
                 l.await();
             } catch (InterruptedException e) {
             }

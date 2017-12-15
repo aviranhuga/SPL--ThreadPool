@@ -84,7 +84,7 @@ public class ActorThreadPool {
 			privatestate.put(actorId,actorState);
 		}//add action to the Queue
 		actors.get(actorId).add(action);
-		//this.version.inc();
+		this.version.inc();
 	}
 
 	/**
@@ -102,6 +102,7 @@ public class ActorThreadPool {
 			thread.interrupt();
 		for (Thread thread:threads)
 			thread.join();
+		System.out.println("___________________________________________________________________________________________________");
 	}
 
 	/**

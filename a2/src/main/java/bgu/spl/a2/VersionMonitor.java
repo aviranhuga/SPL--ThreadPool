@@ -22,7 +22,7 @@ public class VersionMonitor {
 
     private AtomicInteger version = new AtomicInteger(0);
 
-    public int getVersion() {
+    public synchronized int getVersion() {
         return version.intValue();
     }
 

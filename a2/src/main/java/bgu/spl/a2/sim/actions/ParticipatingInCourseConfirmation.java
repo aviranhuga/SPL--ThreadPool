@@ -21,10 +21,20 @@ public class ParticipatingInCourseConfirmation extends Action<Boolean>{
         HashMap<String,Integer> StudentGrades = Student.getGrades();
         Iterator<String> prequisites = ((Vector)Course.getPrequisites()).iterator();
         Boolean preCond = true;
+        if(Course.getAvailableSpots().intValue()==-1) {
+            preCond = false;
+            System.out.println(CourseActorId + " is Closed!");
+        }else if(Course.getAvailableSpots().intValue() <= Course.getRegistered().intValue() ){
+            System.out.println("Course: " + CourseActorId + "is Full!");
+            preCond=false;
+        }
 
         while (prequisites.hasNext() && preCond){
-            if(!StudentGrades.containsKey(prequisites.next()))
-                preCond=false;
+            String currentPre = prequisites.next();
+            if(!StudentGrades.containsKey(currentPre)) {
+                preCond = false;
+                System.out.println( StudentActorId + " didnt fill the prequisites for " + CourseActorId + " he need to take the course " + currentPre);
+            }
         }
 
         this.complete(preCond);

@@ -35,7 +35,7 @@ public class StudentPrivateState extends PrivateState{
 		this.grades.put(courseName,grade);
 	}
 
-	public void deleteGrade(String courseName){
+	public void removeCourse(String courseName){
 		if(this.grades.containsKey(courseName))
 			this.grades.remove(courseName);
 	}
