@@ -1,8 +1,6 @@
 package bgu.spl.a2.sim;
 import bgu.spl.a2.Promise;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -35,23 +33,29 @@ public class SuspendingMutex {
 	 * 
 	 * @return a promise for the requested computer
 	 */
-	public Promise<Computer> down(){
+	public Promise<Computer> down() {
 		Promise<Computer> getComputer = new Promise<Computer>();
-		Boolean avilableComptuer;
-		if(available.compareAndSet(true,false)){
+
+		if (available.compareAndSet(true, false)) {
 			getComputer.resolve(this.computer);
 			return getComputer;
-		}
-		else{
-			PromiseQueue.add(getComputer);
-			return getComputer;
-		}
+		}else PromiseQueue.add(getComputer);
+
+		if (available.compareAndSet(true, false))
+				this.PromiseQueue.poll().resolve(this.computer);
+
+		return getComputer;
 	}
 	/**
 	 * Computer return procedure
 	 * releases a computer which becomes available in the warehouse upon completion
 	 */
 	public void up(){
-
+		if(PromiseQueue.isEmpty()) {
+			this.available.set(true);
+			if((!PromiseQueue.isEmpty()) && (available.compareAndSet(true, false)))
+				this.PromiseQueue.poll().resolve(this.computer);
+		}
+		else this.PromiseQueue.poll().resolve(this.computer);
 	}
 }

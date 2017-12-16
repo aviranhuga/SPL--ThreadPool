@@ -49,8 +49,8 @@ public abstract class Action<R> {
         this.actorId = actorId;
         this.actorState = actorState;
         if(Continue){
-            call.call();
             this.Continue=false;
+            call.call();
         }
         else start();
    }

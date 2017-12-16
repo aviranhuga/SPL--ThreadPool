@@ -9,10 +9,11 @@ public class Computer {
 	String computerType;
 	long failSig;
 	long successSig;
-	private SuspendingMutex Mutex = new SuspendingMutex(this);
+	private SuspendingMutex Mutex;
 	
 	public Computer(String computerType) {
 		this.computerType = computerType;
+		this.Mutex = new SuspendingMutex(this);
 	}
 	
 	/**
@@ -32,4 +33,15 @@ public class Computer {
 		}//end of while
 		return successSig;
 	}
+
+	public void setSig(long failSig,long successSig){
+		this.failSig=failSig;
+		this.successSig=successSig;
+	}
+
+	public SuspendingMutex getSuspendingMutex(){
+		return this.Mutex;
+	}
+
+	public String getComputerType(){return computerType;}
 }

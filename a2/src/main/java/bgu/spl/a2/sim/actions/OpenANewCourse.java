@@ -27,9 +27,9 @@ public class OpenANewCourse extends bgu.spl.a2.Action<Boolean>{
                 ((CoursePrivateState)this.actorState).setAvailableSpots(this.availableSpots);
                 this.complete(true);
                 this.actorState.addRecord(getActionName());
-                System.out.println("New Course: " + this.actorId + " add to Department: " + DepartmentActorId);
+              //  System.out.println("New Course: " + this.actorId + " add to Department: " + DepartmentActorId);
             }else {
-                System.out.println("New Course: " + this.actorId + " add to Department: " + DepartmentActorId + " Failed!");
+              //  System.out.println("New Course: " + this.actorId + " add to Department: " + DepartmentActorId + " Failed!");
                 this.complete(false);
             }
         });

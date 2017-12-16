@@ -24,9 +24,9 @@ public class OpeningNewPlacesInACourse extends bgu.spl.a2.Action<Boolean>{
             if(actions.get(0).getResult().get()) {
                 this.complete(true);
                 this.actorState.addRecord(getActionName());
-                System.out.println("Added " + availableSpots + " Places in Course: " + courseName);
+                //System.out.println("Added " + availableSpots + " Places in Course: " + courseName);
             }else {
-                System.out.println("Open new places in " + courseName + "Failed!");
+                //System.out.println("Open new places in " + courseName + "Failed!");
                 this.complete(false);
             }
         });

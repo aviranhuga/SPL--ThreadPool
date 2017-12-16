@@ -5,6 +5,8 @@
  */
 package bgu.spl.a2.sim;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+
 import bgu.spl.a2.ActorThreadPool;
 import bgu.spl.a2.PrivateState;
 
@@ -30,8 +32,7 @@ public class Simulator {
 	* @param myActorThreadPool - the ActorThreadPool which will be used by the simulator
 	*/
 	public static void attachActorThreadPool(ActorThreadPool myActorThreadPool){
-		//TODO: replace method body with real implementation
-		throw new UnsupportedOperationException("Not Implemented Yet.");
+			actorThreadPool = myActorThreadPool;
 	}
 	
 	/**
@@ -39,8 +40,7 @@ public class Simulator {
 	* returns list of private states
 	*/
 	public static HashMap<String,PrivateState> end(){
-		//TODO: replace method body with real implementation
-		throw new UnsupportedOperationException("Not Implemented Yet.");
+		return null;
 	}
 	
 	

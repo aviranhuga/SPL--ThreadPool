@@ -24,9 +24,9 @@ public class ParticipatingInCourse extends Action<Boolean> {
                 ((StudentPrivateState)this.actorState).addGrade(this.CourseActorId,this.Grade);
                 this.complete(true);
                 this.actorState.addRecord(getActionName());
-                System.out.println("Student: " + this.actorId + " Participating In Course: " + CourseActorId + " Grade: " + Grade);
+                //System.out.println("Student: " + this.actorId + " Participating In Course: " + CourseActorId + " Grade: " + Grade);
             }else {
-                System.out.println("Student: " + this.actorId + " Participating In Course: " + CourseActorId + " Failed!");
+                //System.out.println("Student: " + this.actorId + " Participating In Course: " + CourseActorId + " Failed!");
                 this.complete(false);
             }
         });

@@ -21,9 +21,9 @@ public class AddStudent extends bgu.spl.a2.Action<Boolean>{
             if(actions.get(0).getResult().get()) {
                 this.complete(true);
                 this.actorState.addRecord(getActionName());
-                System.out.println("Student: " + this.actorId + " added to Department: " + DepartmentActorId);
+                //System.out.println("Student: " + this.actorId + " added to Department: " + DepartmentActorId);
             }else {
-                System.out.println("Student: " + this.actorId + " added to Department: " + DepartmentActorId + " Failed!");
+               // System.out.println("Student: " + this.actorId + " added to Department: " + DepartmentActorId + " Failed!");
                 this.complete(false);
             }
         });
