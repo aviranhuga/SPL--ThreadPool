@@ -76,7 +76,7 @@ public class ActorThreadPool {
 	 * @param actorState
 	 *            actor's private state (actor's information)
 	 */
-	public void submit(Action<?> action, String actorId, PrivateState actorState) {
+	public synchronized void submit(Action<?> action, String actorId, PrivateState actorState) {
 		if(!actors.containsKey(actorId)) { // The actor don't have a Queue
 			ConcurrentLinkedQueue<Action<?>> actorQueue = new ConcurrentLinkedQueue<Action<?>>();
 			actors.put(actorId,actorQueue);
@@ -116,6 +116,7 @@ public class ActorThreadPool {
 	private void ThreadMission(){
 		String actorId = "";
 		Boolean foundAction = false;
+		int currVersion = 0;
 
 		while(!Thread.currentThread().isInterrupted()) {
 			//Find available Actor Queue
@@ -127,19 +128,19 @@ public class ActorThreadPool {
 						availableActor.put(actorId, false);
 						foundAction = true;
 					}
-				}
+					currVersion = this.version.getVersion();
+				}//end of while
 			}//end of sync
-			if (foundAction) {
-				((Action<?>) this.actors.get(actorId).poll()).handle(this, actorId, this.getPrivateState(actorId));// make the Action
-				availableActor.put(actorId, true);
-				this.version.inc();
-				foundAction = false;
+				if (foundAction) {
+						((Action<?>) this.actors.get(actorId).poll()).handle(this, actorId, this.getPrivateState(actorId));// make the Action
+						availableActor.put(actorId, true);
+					//this.version.inc();
+					foundAction = false;
 			}
-			else{//no available Action
+			else {//no available Action
 				try {
-					this.version.await(this.version.getVersion());
-				}
-				catch (InterruptedException e){
+					this.version.await(currVersion);
+				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
 				}
 			}//end of else

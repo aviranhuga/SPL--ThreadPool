@@ -13,41 +13,41 @@ import java.util.List;
 public class CloseACourse extends bgu.spl.a2.Action<Boolean>{
 
     private String DepartmentActorId;
-    private String courseName;
 
     @Override
     protected void start(){
+        //Delete Course From the Department
         List<Action<Boolean>> actions = new ArrayList<>();
-        Action<Boolean> Confirmation = new CloseACourseConfirmation(this.DepartmentActorId,this.courseName);
+        Action<Boolean> Confirmation = new CloseACourseConfirmation(this.actorId);
         actions.add(Confirmation);
         this.sendMessage(Confirmation, DepartmentActorId , new DepartmentPrivateState());
+        //Unregister all the Students
+        Iterator<String> StudentsList = ((CoursePrivateState)this.actorState).getRegStudents().iterator();
+        Action<Boolean> removeStudent;
+        while(StudentsList.hasNext()){
+            removeStudent = new Unregister(this.actorId);
+            actions.add(removeStudent);
+            this.sendMessage(removeStudent,StudentsList.next(),new StudentPrivateState());
+        }
+
         this.then(actions,()->{
             if(actions.get(0).getResult().get()) {
-                //Delete Course from the Department
-                ((DepartmentPrivateState) this.pool.getPrivateState(DepartmentActorId)).deleteCourse(courseName);
-
-                Iterator<String> StudentsList = ((CoursePrivateState)this.pool.getPrivateState(courseName)).getRegStudents().iterator();
-                while(StudentsList.hasNext())//delete course from grade sheet
-                    ((StudentPrivateState)this.pool.getPrivateState(StudentsList.next())).removeCourse(this.courseName);
-                ((CoursePrivateState)this.pool.getPrivateState(courseName)).getRegStudents().clear();
-                ((CoursePrivateState)this.pool.getPrivateState(courseName)).setAvailableSpots(-1);
-
+                ((CoursePrivateState)this.actorState).setAvailableSpots(-1);
                 this.complete(true);
                 this.actorState.addRecord(getActionName());
-                System.out.println("Course: " + courseName + " Closed in " + DepartmentActorId);
+                System.out.println("Course: " + this.actorId + " Closed in the Department: " + DepartmentActorId);
             }else {
-                System.out.println("Closing " + courseName + " Failed!");
+                System.out.println("Closing The Course: " + this.actorId + " Failed!");
                 this.complete(false);
             }
         });
 
     }
 
-    public CloseACourse(String courseName , String DepartmentActorId){
+    public CloseACourse(String DepartmentActorId){
         this.ActionName = "Close A Course";
         this.Result = new Promise<Boolean>();
         this.DepartmentActorId = DepartmentActorId;
-        this.courseName = courseName;
     }
 }
 

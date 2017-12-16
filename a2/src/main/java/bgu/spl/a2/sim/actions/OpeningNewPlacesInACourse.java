@@ -17,16 +17,14 @@ public class OpeningNewPlacesInACourse extends bgu.spl.a2.Action<Boolean>{
     @Override
     protected void start(){
         List<Action<Boolean>> actions = new ArrayList<>();
-        Action<Boolean> Confirmation = new OpeningNewPlacesInACourseConfirmation(this.courseName);
+        Action<Boolean> Confirmation = new OpeningNewPlacesInACourseConfirmation(this.courseName,this.availableSpots);
         actions.add(Confirmation);
         this.sendMessage(Confirmation, courseName , new CoursePrivateState());
         this.then(actions,()->{
             if(actions.get(0).getResult().get()) {
-                CoursePrivateState course = ((CoursePrivateState)this.pool.getPrivateState(courseName));
-                course.setAvailableSpots(course.getAvailableSpots()+this.availableSpots);
                 this.complete(true);
                 this.actorState.addRecord(getActionName());
-                System.out.println("Added" + availableSpots + "Places in Course: " + courseName);
+                System.out.println("Added " + availableSpots + " Places in Course: " + courseName);
             }else {
                 System.out.println("Open new places in " + courseName + "Failed!");
                 this.complete(false);

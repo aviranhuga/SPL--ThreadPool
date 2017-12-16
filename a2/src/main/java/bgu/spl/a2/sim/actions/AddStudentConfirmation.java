@@ -7,24 +7,22 @@ import bgu.spl.a2.sim.privateStates.DepartmentPrivateState;
 public class AddStudentConfirmation extends Action<Boolean>{
 
     private String StudentActorId;
-    private String DepartmentActorId;
 
     @Override
     protected void start() {
-        DepartmentPrivateState Department = (DepartmentPrivateState)this.pool.getPrivateState(DepartmentActorId);
-        if (Department.getCourseList().contains(this.StudentActorId)) {
+        if (((DepartmentPrivateState)this.actorState).getStudentList().contains(this.StudentActorId)) {
             this.complete(false);
         }
         else {
+            ((DepartmentPrivateState)this.actorState).addStudent(this.StudentActorId);
             this.complete(true);
         }
 
     }
 
-    AddStudentConfirmation(String StudentId,String DepartmentId){
+    AddStudentConfirmation(String StudentId){
         this.StudentActorId=StudentId;
-        this.DepartmentActorId=DepartmentId;
-        this.setActionName("Add A Student Conifmation");
+        this.setActionName("Add a Student Confirmation");
         this.Result = new Promise<Boolean>();
     }
 

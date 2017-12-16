@@ -14,37 +14,34 @@ public class OpenANewCourse extends bgu.spl.a2.Action<Boolean>{
     private Integer availableSpots;
     private Vector<String> prequisites;
     private String DepartmentActorId;
-    private String courseName;
 
     @Override
     protected void start(){
         List<Action<Boolean>> actions = new ArrayList<>();
-        Action<Boolean> Confirmation = new OpenANewCourseConfirmation(this.DepartmentActorId,this.courseName);
+        Action<Boolean> Confirmation = new OpenANewCourseConfirmation(this.actorId);
         actions.add(Confirmation);
         this.sendMessage(Confirmation, DepartmentActorId , new DepartmentPrivateState());
         this.then(actions,()->{
             if(actions.get(0).getResult().get()) {
-                ((DepartmentPrivateState) this.pool.getPrivateState(DepartmentActorId)).addCourse(this.courseName);
-                ((CoursePrivateState)this.pool.getPrivateState(courseName)).setPrequisites(this.prequisites);
-                ((CoursePrivateState)this.pool.getPrivateState(courseName)).setAvailableSpots(this.availableSpots);
+                ((CoursePrivateState)this.actorState).setPrequisites(this.prequisites);
+                ((CoursePrivateState)this.actorState).setAvailableSpots(this.availableSpots);
                 this.complete(true);
                 this.actorState.addRecord(getActionName());
-                System.out.println("New Course: " + courseName + " add to Department: " + DepartmentActorId);
+                System.out.println("New Course: " + this.actorId + " add to Department: " + DepartmentActorId);
             }else {
-                System.out.println("New Course: " + courseName + " add to Department: " + DepartmentActorId + " Failed!");
+                System.out.println("New Course: " + this.actorId + " add to Department: " + DepartmentActorId + " Failed!");
                 this.complete(false);
             }
         });
 
     }
 
-    public OpenANewCourse(String courseName,Integer availableSpots,Vector<String> prequisites, String DepartmentActorId){
+    public OpenANewCourse(Integer availableSpots,Vector<String> prequisites, String DepartmentActorId){
         this.ActionName = "Open A New Course";
         this.Result = new Promise<Boolean>();
         this.availableSpots = availableSpots;
         this.prequisites = prequisites;
         this.DepartmentActorId = DepartmentActorId;
-        this.courseName = courseName;
     }
 }
 

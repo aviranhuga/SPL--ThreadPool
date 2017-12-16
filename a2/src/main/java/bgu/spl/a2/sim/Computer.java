@@ -1,5 +1,6 @@
 package bgu.spl.a2.sim;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ public class Computer {
 	String computerType;
 	long failSig;
 	long successSig;
+	private SuspendingMutex Mutex = new SuspendingMutex(this);
 	
 	public Computer(String computerType) {
 		this.computerType = computerType;
@@ -22,7 +24,12 @@ public class Computer {
 	 * @return a signature if couersesGrades grades meet the conditions
 	 */
 	public long checkAndSign(List<String> courses, Map<String, Integer> coursesGrades){
-		//TODO: replace method body with real implementation
-		throw new UnsupportedOperationException("Not Implemented Yet.");
+		Iterator<String> courseIt = courses.iterator();
+		while (courseIt.hasNext()) {
+			String nextCourse = courseIt.next();
+			if(!(coursesGrades.containsKey(nextCourse)))return failSig;
+			else if(coursesGrades.get(nextCourse)<=56) return failSig;
+		}//end of while
+		return successSig;
 	}
 }

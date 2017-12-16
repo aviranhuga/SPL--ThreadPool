@@ -12,37 +12,36 @@ import java.util.Vector;
 public class ParticipatingInCourseConfirmation extends Action<Boolean>{
 
     private String StudentActorId;
-    private String CourseActorId;
+    private HashMap<String,Integer> StudentGrades;
 
     @Override
     protected void start() {
-        CoursePrivateState Course = (CoursePrivateState)this.pool.getPrivateState(this.CourseActorId);
-        StudentPrivateState Student = (StudentPrivateState)this.pool.getPrivateState(this.StudentActorId);
-        HashMap<String,Integer> StudentGrades = Student.getGrades();
+        CoursePrivateState Course = (CoursePrivateState)this.actorState;
         Iterator<String> prequisites = ((Vector)Course.getPrequisites()).iterator();
+
         Boolean preCond = true;
         if(Course.getAvailableSpots().intValue()==-1) {
             preCond = false;
-            System.out.println(CourseActorId + " is Closed!");
+            System.out.println(this.actorId + " is Closed!");
         }else if(Course.getAvailableSpots().intValue() <= Course.getRegistered().intValue() ){
-            System.out.println("Course: " + CourseActorId + "is Full!");
+            System.out.println("Course: " + this.actorId + "is Full!");
             preCond=false;
         }
-
         while (prequisites.hasNext() && preCond){
             String currentPre = prequisites.next();
             if(!StudentGrades.containsKey(currentPre)) {
                 preCond = false;
-                System.out.println( StudentActorId + " didnt fill the prequisites for " + CourseActorId + " he need to take the course " + currentPre);
+                System.out.println( StudentActorId + " didnt fill the prequisites for " + this.actorId + " he need to take the course " + currentPre);
             }
         }
+        if (preCond==true) Course.addStudents(this.StudentActorId);
 
         this.complete(preCond);
     }
 
-     ParticipatingInCourseConfirmation(String StudentId , String CourseId){
+     ParticipatingInCourseConfirmation(String StudentId, HashMap<String,Integer> StudentGrades){
         this.StudentActorId = StudentId;
-        this.CourseActorId = CourseId;
+        this.StudentGrades = StudentGrades;
         this.setActionName("Participating In Course Confirmation");
         this.Result = new Promise<Boolean>();
     }
