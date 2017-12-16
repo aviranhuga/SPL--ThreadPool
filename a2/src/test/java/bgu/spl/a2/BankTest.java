@@ -4,6 +4,7 @@ import bgu.spl.a2.sim.actions.*;
 import bgu.spl.a2.sim.privateStates.CoursePrivateState;
 import bgu.spl.a2.sim.privateStates.StudentPrivateState;
 
+import java.util.LinkedList;
 import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
 
@@ -14,17 +15,51 @@ import java.util.concurrent.CountDownLatch;
 public class BankTest {
 
     public static void main(String[] args) throws InterruptedException {
-            for (int i=0 ; i<100000 ; i++) {
+            for (int i=0 ; i<1001 ; i++) {
                     ActorThreadPool pool = new ActorThreadPool(8);
                     pool.start();
 
                     Action<Boolean> OpenCourse0 = new OpenANewCourse(10 ,new Vector<String>(), "CS");
+                    Action<Boolean> OpenCourse1 = new OpenANewCourse(0 ,new Vector<String>(), "CS");
+                    Action<Boolean> OpenCourse2 = new OpenANewCourse(0 ,new Vector<String>(), "CS");
+                    Action<Boolean> OpenCourse3 = new OpenANewCourse(0 ,new Vector<String>(), "CS");
+                    Action<Boolean> OpenCourse4 = new OpenANewCourse(0 ,new Vector<String>(), "CS");
                     pool.submit(OpenCourse0, "DataStructers", new CoursePrivateState());
+                    pool.submit(OpenCourse1, "dummy1", new CoursePrivateState());
+                    pool.submit(OpenCourse2, "dummy2", new CoursePrivateState());
+                    pool.submit(OpenCourse3, "dummy3", new CoursePrivateState());
+                    pool.submit(OpenCourse4, "dummy4", new CoursePrivateState());
 
-                    CountDownLatch l1 = new CountDownLatch(1);
+                    CountDownLatch l1 = new CountDownLatch(5);
                     OpenCourse0.getResult().subscribe(() -> l1.countDown());
+                    OpenCourse1.getResult().subscribe(() -> l1.countDown());
+                    OpenCourse2.getResult().subscribe(() -> l1.countDown());
+                    OpenCourse3.getResult().subscribe(() -> l1.countDown());
+                    OpenCourse4.getResult().subscribe(() -> l1.countDown());
                     try {
                             l1.await();
+                    } catch (InterruptedException e) {
+                    }
+
+                    LinkedList<String> Pref = new LinkedList<>();
+                    LinkedList<Integer> PrefGrade = new LinkedList<>();
+                    Pref.add("dummy1");
+                    Pref.add("dummy2");
+                    Pref.add("dummy3");
+                    Pref.add("DataStructers");
+                    Pref.add("dummy4");
+                    PrefGrade.add(new Integer(30));
+                    PrefGrade.add(new Integer(30));
+                    PrefGrade.add(new Integer(30));
+                    PrefGrade.add(new Integer(30));
+                    PrefGrade.add(new Integer(30));
+                    Action<Boolean> AddWithPref = new RegisterWithPreferences(Pref,PrefGrade);
+                    pool.submit(AddWithPref,"Refael",new StudentPrivateState());
+
+                    CountDownLatch l3 = new CountDownLatch(1);
+                    AddWithPref.getResult().subscribe(() -> l3.countDown());
+                    try {
+                            l3.await();
                     } catch (InterruptedException e) {
                     }
 
@@ -54,7 +89,7 @@ public class BankTest {
                     pool.submit(PartInCourse2, "Amit", new StudentPrivateState());
                     pool.submit(PartInCourse3, "Sasha", new StudentPrivateState());
                     pool.submit(PartInCourse4, "Shir1", new StudentPrivateState());
-                    pool.submit(PartInCourse5, "Shir12", new StudentPrivateState());
+                    pool.submit(PartInCourse5, "Shir2", new StudentPrivateState());
 
                     Action<Boolean> AddNewPlace = new OpeningNewPlacesInACourse(30,"DataStructers");
 

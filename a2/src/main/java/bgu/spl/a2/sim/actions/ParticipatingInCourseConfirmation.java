@@ -24,7 +24,7 @@ public class ParticipatingInCourseConfirmation extends Action<Boolean>{
             preCond = false;
             System.out.println(this.actorId + " is Closed!");
         }else if(Course.getAvailableSpots().intValue() <= Course.getRegistered().intValue() ){
-            System.out.println("Course: " + this.actorId + "is Full!");
+            System.out.println("Course: " + this.actorId + " is Full!");
             preCond=false;
         }
         while (prequisites.hasNext() && preCond){

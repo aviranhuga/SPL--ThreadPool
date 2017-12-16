@@ -132,8 +132,8 @@ public abstract class Action<R> {
     protected synchronized void Actioncounter(){
         actionCounter.decrementAndGet();
         if (actionCounter.intValue() == 0) {
-            sendMessage(this, this.actorId, this.actorState);
             actionCounter.set(0);
+            sendMessage(this, this.actorId, this.actorState);
         }
     }
 
