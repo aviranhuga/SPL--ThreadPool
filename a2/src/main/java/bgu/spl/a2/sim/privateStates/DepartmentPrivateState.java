@@ -1,5 +1,6 @@
 package bgu.spl.a2.sim.privateStates;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;

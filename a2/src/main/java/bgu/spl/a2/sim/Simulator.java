@@ -4,6 +4,10 @@
  * and open the template in the editor.
  */
 package bgu.spl.a2.sim;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -25,7 +29,7 @@ public class Simulator {
 	* Begin the simulation Should not be called before attachActorThreadPool()
 	*/
     public static void start(){
-		Warehouse warehouse = jsonHandler.buildWarehouse();
+		jsonHandler.buildWarehouse();
 		actorThreadPool.start();
 
 		System.out.println("___________Phase 1 Starting_________");
@@ -66,11 +70,7 @@ public class Simulator {
 
 
 		System.out.println("__________________end_______________");
-		try {
-			actorThreadPool.shutdown();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		end();
 	}
 	
 	/**
@@ -87,17 +87,31 @@ public class Simulator {
 	* returns list of private states
 	*/
 	public static HashMap<String,PrivateState> end(){
-		Map<String,PrivateState> privateStateHashMap = actorThreadPool.getActors();
-		return null;
+		Map<String,PrivateState> SimlationResult = actorThreadPool.getActors();
+		try {
+			actorThreadPool.shutdown();
+			FileOutputStream fout = new FileOutputStream("result.ser");
+			ObjectOutputStream oos = new ObjectOutputStream(fout);
+			oos.writeObject(SimlationResult);
+
+		} catch (FileNotFoundException e) {
+			System.out.println("Can't find the file!");
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		return new HashMap<>(SimlationResult);
 	}
 	
 	
 	public static void main(String [] args) {
 		String Path = "C:\\Users\\avira\\Desktop\\SPL-Assinment2\\test.json";
-		for(int i=0 ; i<250000 ; i++) {
+
 			jsonHandler = new JsonHandler(Path);
 			attachActorThreadPool(jsonHandler.buildActorThreadPool());
 			start();
-		}
+
 	}
 }

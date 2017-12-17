@@ -40,9 +40,9 @@ public class ActorThreadPool {
 		this.nthreads = nthreads;
 		this.threads = new Thread[nthreads];
 		this.version = new VersionMonitor();
-		this.actors = new ConcurrentHashMap<String,ConcurrentLinkedQueue>();
-		this.privatestate = new ConcurrentHashMap<String, PrivateState>();
-		this.availableActor = new ConcurrentHashMap<String,Boolean> ();
+		this.actors = new ConcurrentHashMap<>();
+		this.privatestate = new ConcurrentHashMap<>();
+		this.availableActor = new ConcurrentHashMap<> ();
 		for (int i=0 ; i< this.threads.length ; i++)
 			threads[i] = new Thread(()-> ThreadMission());
 	}
@@ -131,9 +131,8 @@ public class ActorThreadPool {
 				}//end of while
 			}//end of sync
 				if (foundAction) {
-						((Action<?>) this.actors.get(actorId).poll()).handle(this, actorId, this.getPrivateState(actorId));// make the Action
-						availableActor.put(actorId, true);
-					//this.version.inc();
+				((Action<?>) this.actors.get(actorId).poll()).handle(this, actorId, this.getPrivateState(actorId));// make the Action
+					availableActor.put(actorId, true);
 					foundAction = false;
 			}
 			else {//no available Action
