@@ -102,7 +102,6 @@ public class ActorThreadPool {
 			thread.interrupt();
 		for (Thread thread:threads)
 			thread.join();
-		System.out.println("___________________________________________________________________________________________________");
 	}
 
 	/**

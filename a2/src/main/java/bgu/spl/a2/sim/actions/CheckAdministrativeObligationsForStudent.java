@@ -15,7 +15,7 @@ public class CheckAdministrativeObligationsForStudent extends Action<Boolean> {
     protected void start() {
         StudentPrivateState student = (StudentPrivateState)this.actorState;
         student.setSignature(this.computer.checkAndSign(Conditions,student.getGrades()));
-        System.out.println(this.actorId + " sig is: " +student.getSignature());
+    //    System.out.println(this.actorId + " sig is: " +student.getSignature());
         this.complete(true);
     }
 

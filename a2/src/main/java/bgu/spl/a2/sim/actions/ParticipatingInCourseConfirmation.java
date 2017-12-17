@@ -3,11 +3,10 @@ package bgu.spl.a2.sim.actions;
 import bgu.spl.a2.Action;
 import bgu.spl.a2.Promise;
 import bgu.spl.a2.sim.privateStates.CoursePrivateState;
-import bgu.spl.a2.sim.privateStates.StudentPrivateState;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.LinkedList;
 
 public class ParticipatingInCourseConfirmation extends Action<Boolean>{
 
@@ -17,21 +16,21 @@ public class ParticipatingInCourseConfirmation extends Action<Boolean>{
     @Override
     protected void start() {
         CoursePrivateState Course = (CoursePrivateState)this.actorState;
-        Iterator<String> prequisites = ((Vector)Course.getPrequisites()).iterator();
+        Iterator<String> prequisites = ((LinkedList)Course.getPrequisites()).iterator();
 
         Boolean preCond = true;
         if(Course.getAvailableSpots().intValue()==-1) {
             preCond = false;
-            System.out.println(this.actorId + " is Closed!");
+    //        System.out.println(this.actorId + " is Closed!");
         }else if(Course.getAvailableSpots().intValue() <= Course.getRegistered().intValue() ){
-            System.out.println("Course: " + this.actorId + " is Full!");
+    //        System.out.println("Course: " + this.actorId + " is Full!");
             preCond=false;
         }
         while (prequisites.hasNext() && preCond){
             String currentPre = prequisites.next();
             if(!StudentGrades.containsKey(currentPre)) {
                 preCond = false;
-                System.out.println( StudentActorId + " didnt fill the prequisites for " + this.actorId + " he need to take the course " + currentPre);
+       //         System.out.println( StudentActorId + " didnt fill the prequisites for " + this.actorId + " he need to take the course " + currentPre);
             }
         }
         if (preCond==true) Course.addStudents(this.StudentActorId);

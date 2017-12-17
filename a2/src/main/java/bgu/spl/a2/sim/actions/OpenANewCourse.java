@@ -6,13 +6,13 @@ import bgu.spl.a2.sim.privateStates.CoursePrivateState;
 import bgu.spl.a2.sim.privateStates.DepartmentPrivateState;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 public class OpenANewCourse extends bgu.spl.a2.Action<Boolean>{
 
     private Integer availableSpots;
-    private Vector<String> prequisites;
+    private LinkedList<String> prequisites;
     private String DepartmentActorId;
 
     @Override
@@ -36,7 +36,7 @@ public class OpenANewCourse extends bgu.spl.a2.Action<Boolean>{
 
     }
 
-    public OpenANewCourse(Integer availableSpots,Vector<String> prequisites, String DepartmentActorId){
+    public OpenANewCourse(Integer availableSpots,LinkedList<String> prequisites, String DepartmentActorId){
         this.ActionName = "Open A New Course";
         this.Result = new Promise<Boolean>();
         this.availableSpots = availableSpots;

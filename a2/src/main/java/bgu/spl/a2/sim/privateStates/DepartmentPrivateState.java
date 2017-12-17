@@ -1,5 +1,6 @@
 package bgu.spl.a2.sim.privateStates;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -18,8 +19,8 @@ public class DepartmentPrivateState extends PrivateState{
 	 * this may cause automatic tests to fail..
 	 */
 	public DepartmentPrivateState() {
-		courseList = new Vector<String>();
-		studentList = new Vector<String>();
+		courseList = new LinkedList<>();
+		studentList = new LinkedList<>();
 	}
 
 	public List<String> getCourseList() {
@@ -38,12 +39,6 @@ public class DepartmentPrivateState extends PrivateState{
 		int courseIndex = this.courseList.indexOf(courseName);
 		if (courseIndex!=-1)
 			this.courseList.remove(courseIndex);
-	}
-
-	public void deleteStudent(String studentName){
-		int studentIndex = this.studentList.indexOf(studentName);
-		if (studentIndex!=-1)
-			this.studentList.remove(studentIndex);
 	}
 
 }

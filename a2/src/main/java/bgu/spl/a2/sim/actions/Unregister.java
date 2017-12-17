@@ -23,9 +23,9 @@ public class Unregister extends Action<Boolean> {
                 ((StudentPrivateState)this.actorState).removeCourse(this.CourseActorId);
                 this.complete(true);
                 this.actorState.addRecord(getActionName());
-                System.out.println("Student" + this.actorId + " removed from Course: " + CourseActorId);
+           //     System.out.println("Student" + this.actorId + " removed from Course: " + CourseActorId);
             }else {
-                System.out.println("Student" + this.actorId + " Cannot be removed from " + CourseActorId);
+            //    System.out.println("Student" + this.actorId + " Cannot be removed from " + CourseActorId);
                 this.complete(false);
             }
         });

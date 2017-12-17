@@ -37,7 +37,7 @@ public class CheckAdministrativeObligations extends Action<Boolean>{
                         this.warehouse.releaseComputer(ComputerType);
                         this.complete(true);
                         this.actorState.addRecord(getActionName());
-                        System.out.println("Finish Administrative Check" );
+    //                    System.out.println("Finish Administrative Check" );
 
                     });
                 };

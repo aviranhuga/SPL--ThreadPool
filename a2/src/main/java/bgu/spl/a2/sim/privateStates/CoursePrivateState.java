@@ -1,7 +1,7 @@
 package bgu.spl.a2.sim.privateStates;
 
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 import bgu.spl.a2.PrivateState;
 
@@ -23,8 +23,8 @@ public class CoursePrivateState extends PrivateState{
 	public CoursePrivateState() {
 		availableSpots = new Integer(0);
 		registered = new Integer(0);
-		regStudents = new Vector<String>();
-		prequisites = new Vector<String>();
+		regStudents = new LinkedList<String>();
+		prequisites = new LinkedList<String>();
 	}
 
 	public Integer getAvailableSpots() {
@@ -47,7 +47,7 @@ public class CoursePrivateState extends PrivateState{
 		this.availableSpots = new Integer(AvailableSpots.intValue());
 	}
 
-	public void setPrequisites(Vector<String> Prequisites ){this.prequisites = Prequisites;}
+	public void setPrequisites(LinkedList<String> Prequisites ){this.prequisites = Prequisites;}
 
 	private void incRegistered(){
 		this.registered = new Integer(this.registered.intValue() + 1);

@@ -23,7 +23,7 @@ public class BankTest {
                     ActorThreadPool pool = new ActorThreadPool(8);
                     pool.start();
 
-                    Action<Boolean> OpenCourse0 = new OpenANewCourse(15 ,new Vector<String>(), "CS");
+                    Action<Boolean> OpenCourse0 = new OpenANewCourse(15 ,new LinkedList<>(), "CS");
                     pool.submit(OpenCourse0, "DataStructers", new CoursePrivateState());
 
                     CountDownLatch l1 = new CountDownLatch(1);

@@ -35,9 +35,9 @@ public class CloseACourse extends bgu.spl.a2.Action<Boolean>{
                 ((CoursePrivateState)this.actorState).setAvailableSpots(-1);
                 this.complete(true);
                 this.actorState.addRecord(getActionName());
-                System.out.println("Course: " + this.actorId + " Closed in the Department: " + DepartmentActorId);
+     //           System.out.println("Course: " + this.actorId + " Closed in the Department: " + DepartmentActorId);
             }else {
-                System.out.println("Closing The Course: " + this.actorId + " Failed!");
+     //           System.out.println("Closing The Course: " + this.actorId + " Failed!");
                 this.complete(false);
             }
         });
