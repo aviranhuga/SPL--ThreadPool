@@ -41,7 +41,7 @@ public class JsonHandler {
         HashMap<String,Computer> computers = new HashMap<>();
         for (JsonElement i:ComputerArray){
             String computerType = i.getAsJsonObject().get("Type").getAsString();
-            long failSig = i.getAsJsonObject().get("Sig  Fail").getAsLong();
+            long failSig = i.getAsJsonObject().get("Sig Fail").getAsLong();
             long successSig = i.getAsJsonObject().get("Sig Success").getAsLong();
             Computer computer = new Computer(computerType);
             computer.setSig(failSig,successSig);

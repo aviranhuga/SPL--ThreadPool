@@ -21,11 +21,13 @@ public class ParticipatingInCourse extends Action<Boolean> {
         //check if the course is closed
         if (Course.getAvailableSpots().intValue() == -1) {
             this.complete(false);
+            this.actorState.addRecord(getActionName());
             return;
         }
         //check if the course has space
         if (Course.getAvailableSpots().intValue() <= Course.getRegistered().intValue()) {
             this.complete(false);
+            this.actorState.addRecord(getActionName());
             return;
         }
         List<Action<Boolean>> actions = new ArrayList<>();
@@ -41,6 +43,7 @@ public class ParticipatingInCourse extends Action<Boolean> {
             }else {
                 //System.out.println("Student: " + this.actorId + " Participating In Course: " + CourseActorId + " Failed!");
                 this.complete(false);
+                this.actorState.addRecord(getActionName());
             }
         });
     }
@@ -48,7 +51,7 @@ public class ParticipatingInCourse extends Action<Boolean> {
     public ParticipatingInCourse(String StudentActorId, int Grade){
         this.StudentActorId=StudentActorId;
         this.Grade=Grade;
-        this.setActionName("Participating In Course");
+        this.setActionName("Participate In Course");
         this.Result = new Promise<>();
     }
 

@@ -23,6 +23,7 @@ public class OpenANewCourse extends bgu.spl.a2.Action<Boolean>{
         //Check if the course already exist
         if (((DepartmentPrivateState)this.actorState).getCourseList().contains(this.courseActorId)) {
             this.complete(false);
+            this.actorState.addRecord(getActionName());
             return;
         }
         //open a new course
@@ -36,13 +37,14 @@ public class OpenANewCourse extends bgu.spl.a2.Action<Boolean>{
             }else {
               //  System.out.println("New Course: " + this.actorId + " add to Department: " + DepartmentActorId + " Failed!");
                 this.complete(false);
+                this.actorState.addRecord(getActionName());
             }
         });
 
     }
 
     public OpenANewCourse(Integer availableSpots,LinkedList<String> prequisites, String courseActorId){
-        this.ActionName = "Open A New Course";
+        this.ActionName = "Open Course";
         this.Result = new Promise<>();
         this.availableSpots = availableSpots;
         this.prequisites = prequisites;

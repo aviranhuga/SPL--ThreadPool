@@ -23,8 +23,8 @@ public class CoursePrivateState extends PrivateState{
 	public CoursePrivateState() {
 		availableSpots = new Integer(0);
 		registered = new Integer(0);
-		regStudents = new LinkedList<String>();
-		prequisites = new LinkedList<String>();
+		regStudents = new LinkedList<>();
+		prequisites = new LinkedList<>();
 	}
 
 	public Integer getAvailableSpots() {
@@ -57,19 +57,23 @@ public class CoursePrivateState extends PrivateState{
 		this.registered = new Integer(this.registered.intValue() - 1);
 	}
 
+	private void incAvailable(){
+		this.availableSpots = new Integer(this.availableSpots.intValue() + 1);
+	}
+
+	private void decAvailable(){
+		this.availableSpots = new Integer(this.availableSpots.intValue() - 1);
+	}
+
 	public void addStudents(String studentName){
-		int studentIndex = this.regStudents.indexOf(studentName);
-		if (studentIndex == -1) {
 			this.regStudents.add(studentName);
 			incRegistered();
-		}
+			decAvailable();
 	}
 	public void removeStudents(String studentName){
-		int studentIndex = this.regStudents.indexOf(studentName);
-		if (studentIndex!=-1) {
-			this.regStudents.remove(studentIndex);
+			this.regStudents.remove(studentName);
 			decRegistered();
-		}
+			incAvailable();
 	}
 
 }

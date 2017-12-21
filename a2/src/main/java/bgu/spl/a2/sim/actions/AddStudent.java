@@ -15,12 +15,13 @@ public class AddStudent extends bgu.spl.a2.Action<Boolean>{
     @Override
     protected void start() {
         List<Action<Boolean>> actions = new ArrayList<>();
-        Action<Boolean> Confirmation = new AddStudentConfirmation(this.actorId);
+        Action<Boolean> Confirmation = new AddStudentConfirmation();
         actions.add(Confirmation);
 
         //if the student already exist
         if(((DepartmentPrivateState)this.actorState).getStudentList().contains(StudentActorId)) {
             this.complete(false);
+            this.actorState.addRecord(getActionName());
             return;
         }
         //Create new student
@@ -34,6 +35,7 @@ public class AddStudent extends bgu.spl.a2.Action<Boolean>{
             }else {
                // System.out.println("Student: " + this.actorId + " added to Department: " + DepartmentActorId + " Failed!");
                 this.complete(false);
+                this.actorState.addRecord(getActionName());
             }
         });
 
@@ -42,7 +44,7 @@ public class AddStudent extends bgu.spl.a2.Action<Boolean>{
     public AddStudent(String StudentActorId){
         this.StudentActorId = StudentActorId;
         this.setActionName("Add Student");
-        this.Result = new Promise<Boolean>();
+        this.Result = new Promise<>();
     }
 
 }

@@ -17,7 +17,7 @@ public class Unregister extends Action<Boolean> {
         //check if the student is register to the course
         CoursePrivateState Course = (CoursePrivateState)this.actorState;
         if(!(Course.getRegStudents().contains(studentActorId))){
-            this.complete(false);
+            this.sendMessage(this,this.actorId,this.actorState);
             return;
         }
 
@@ -34,6 +34,7 @@ public class Unregister extends Action<Boolean> {
             }else {
             //    System.out.println("Student" + this.actorId + " Cannot be removed from " + CourseActorId);
                 this.complete(false);
+                this.actorState.addRecord(getActionName());
             }
         });
     }

@@ -88,11 +88,12 @@ public class Simulator {
 	*/
 	public static HashMap<String,PrivateState> end(){
 		Map<String,PrivateState> SimlationResult = actorThreadPool.getActors();
+		HashMap<String,PrivateState> Result = new HashMap<>(SimlationResult);
 		try {
 			actorThreadPool.shutdown();
 			FileOutputStream fout = new FileOutputStream("result.ser");
 			ObjectOutputStream oos = new ObjectOutputStream(fout);
-			oos.writeObject(SimlationResult);
+			oos.writeObject(Result);
 
 		} catch (FileNotFoundException e) {
 			System.out.println("Can't find the file!");
@@ -102,14 +103,14 @@ public class Simulator {
 			e.printStackTrace();
 		}
 
-		return new HashMap<>(SimlationResult);
+		return Result;
 	}
 	
 	
 	public static void main(String [] args) {
 		String Path = "C:\\Users\\avira\\Desktop\\SPL-Assinment2\\test.json";
 
-			jsonHandler = new JsonHandler(Path);
+			jsonHandler = new JsonHandler(args[0]);
 			attachActorThreadPool(jsonHandler.buildActorThreadPool());
 			start();
 

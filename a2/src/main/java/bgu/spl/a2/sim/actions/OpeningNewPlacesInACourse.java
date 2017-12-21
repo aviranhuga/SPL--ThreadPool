@@ -11,9 +11,10 @@ public class OpeningNewPlacesInACourse extends bgu.spl.a2.Action<Boolean>{
     protected void start(){
         CoursePrivateState Course = (CoursePrivateState)this.actorState;
         //check if the course is closed
-        if ((Course.getAvailableSpots())==-1)
+        if ((Course.getAvailableSpots())==-1) {
             this.complete(false);
-        else { //add Spaces
+            this.actorState.addRecord(getActionName());
+        }else { //add Spaces
             Course.setAvailableSpots(Course.getAvailableSpots() + this.extraAvailableSpots);
             this.complete(true);
             this.actorState.addRecord(this.ActionName);

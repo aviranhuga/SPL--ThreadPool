@@ -22,6 +22,7 @@ public class CloseACourse extends bgu.spl.a2.Action<Boolean>{
         //no such a course in the Department
         if (!(((DepartmentPrivateState)this.actorState).getCourseList().contains(this.courseActorId))) {
             this.complete(false);
+            this.actorState.addRecord(getActionName());
             return;
         }
         //Close course
@@ -35,6 +36,7 @@ public class CloseACourse extends bgu.spl.a2.Action<Boolean>{
             }else {
      //           System.out.println("Closing The Course: " + this.actorId + " Failed!");
                 this.complete(false);
+                this.actorState.addRecord(getActionName());
             }
         });
 
