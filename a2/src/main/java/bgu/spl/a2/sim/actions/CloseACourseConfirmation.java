@@ -13,6 +13,7 @@ public class CloseACourseConfirmation extends bgu.spl.a2.Action<Boolean>{
 
     @Override
     protected void start() {
+        ((CoursePrivateState)this.actorState).setAvailableSpots(-1);
         List<Action<Boolean>> actions = new ArrayList<>();
         //Unregister all the Students
         Iterator<String> StudentsList = ((CoursePrivateState)this.actorState).getRegStudents().iterator();
@@ -22,18 +23,7 @@ public class CloseACourseConfirmation extends bgu.spl.a2.Action<Boolean>{
             actions.add(removeStudent);
             this.sendMessage(removeStudent,this.actorId,this.actorState);
         }
-
-        this.then(actions,()->{
-            if(actions.get(0).getResult().get()) {
-                ((CoursePrivateState)this.actorState).setAvailableSpots(-1);
-                this.complete(true);
-                //           System.out.println("Course: " + this.actorId + " Closed in the Department: " + DepartmentActorId);
-            }else {
-                //           System.out.println("Closing The Course: " + this.actorId + " Failed!");
-                this.complete(false);
-            }
-        });
-
+        this.then(actions,()-> this.complete(true) );
     }
 
     public CloseACourseConfirmation(){

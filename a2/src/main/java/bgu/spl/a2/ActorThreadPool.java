@@ -76,12 +76,16 @@ public class ActorThreadPool {
 	 * @param actorState
 	 *            actor's private state (actor's information)
 	 */
-	public synchronized void submit(Action<?> action, String actorId, PrivateState actorState) {
+	public void submit(Action<?> action, String actorId, PrivateState actorState) {
 		if(!actors.containsKey(actorId)) { // The actor don't have a Queue
-			ConcurrentLinkedQueue<Action<?>> actorQueue = new ConcurrentLinkedQueue<Action<?>>();
-			actors.put(actorId,actorQueue);
-			availableActor.put(actorId,true);
-			privatestate.put(actorId,actorState);
+			synchronized (actors) {
+				if(!actors.containsKey(actorId)) {
+					ConcurrentLinkedQueue<Action<?>> actorQueue = new ConcurrentLinkedQueue<>();
+					actors.put(actorId, actorQueue);
+					availableActor.put(actorId, true);
+					privatestate.put(actorId, actorState);
+				}
+			}
 		}//add action to the Queue
 		actors.get(actorId).add(action);
 		this.version.inc();

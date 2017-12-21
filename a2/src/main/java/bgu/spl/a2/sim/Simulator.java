@@ -108,8 +108,7 @@ public class Simulator {
 	
 	
 	public static void main(String [] args) {
-		String Path = "C:\\Users\\avira\\Desktop\\SPL-Assinment2\\test.json";
-
+		//String Path = "C:\\Users\\avira\\Desktop\\SPL-Assinment2\\test.json";
 			jsonHandler = new JsonHandler(args[0]);
 			attachActorThreadPool(jsonHandler.buildActorThreadPool());
 			start();

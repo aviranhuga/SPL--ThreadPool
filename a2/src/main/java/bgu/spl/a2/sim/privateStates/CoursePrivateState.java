@@ -58,10 +58,12 @@ public class CoursePrivateState extends PrivateState{
 	}
 
 	private void incAvailable(){
+		if(!(getAvailableSpots()==-1))
 		this.availableSpots = new Integer(this.availableSpots.intValue() + 1);
 	}
 
 	private void decAvailable(){
+		if(!(getAvailableSpots()==-1))
 		this.availableSpots = new Integer(this.availableSpots.intValue() - 1);
 	}
 
