@@ -31,9 +31,23 @@ public class ParticipatingInCourse extends Action<Boolean> {
         this.sendMessage(Confirmation, StudentActorId , new StudentPrivateState());
         this.then(actions,()->{
             if(actions.get(0).getResult().get()) {
+                //check if the there is free space
+                if (Course.getAvailableSpots().intValue() <= 0) {
+                    this.complete(false);
+                    this.actorState.addRecord(getActionName());
+                    return;
+                }
+
                 Course.addStudents(this.StudentActorId);
-                this.complete(true);
-                this.actorState.addRecord(getActionName());
+
+                List<Action<Boolean>> actionsFinal = new ArrayList<>();
+                Action<Boolean> ConfirmationFinal = new ParticipatingInCourseFinalConfirmation(this.actorId,Grade);
+                actionsFinal.add(ConfirmationFinal);
+                this.sendMessage(ConfirmationFinal, StudentActorId , new StudentPrivateState());
+                this.then(actions,()-> {
+                            this.complete(true);
+                            this.actorState.addRecord(getActionName());
+                        });
                 //System.out.println("Student: " + this.actorId + " Participating In Course: " + CourseActorId + " Grade: " + Grade);
             }else {
                 //System.out.println("Student: " + this.actorId + " Participating In Course: " + CourseActorId + " Failed!");

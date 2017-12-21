@@ -24,7 +24,7 @@ public class ParticipatingInCourseConfirmation extends Action<Boolean> {
                 return;
             }//end of if
         }//end of while
-            ((StudentPrivateState) this.actorState).addGrade(courseActorId,new Integer(Grade));
+            //((StudentPrivateState) this.actorState).addGrade(courseActorId,new Integer(Grade));
             this.complete(true);
         }
 

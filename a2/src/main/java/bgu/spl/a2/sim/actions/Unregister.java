@@ -17,7 +17,8 @@ public class Unregister extends Action<Boolean> {
         //check if the student is register to the course
         CoursePrivateState Course = (CoursePrivateState)this.actorState;
         if(!(Course.getRegStudents().contains(studentActorId))){
-            this.sendMessage(this,this.actorId,this.actorState);
+            this.actorState.addRecord(getActionName());
+            this.complete(false);
             return;
         }
 
