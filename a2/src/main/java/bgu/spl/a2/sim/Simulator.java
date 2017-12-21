@@ -112,6 +112,5 @@ public class Simulator {
 			jsonHandler = new JsonHandler(args[0]);
 			attachActorThreadPool(jsonHandler.buildActorThreadPool());
 			start();
-
 	}
 }
