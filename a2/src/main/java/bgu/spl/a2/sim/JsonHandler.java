@@ -73,18 +73,18 @@ public class JsonHandler {
                     Iterator<JsonElement> It = action.get("Prerequisites").getAsJsonArray().iterator();
                     while (It.hasNext())
                         pre.add(It.next().getAsString());
-                    Action<Boolean> newaction = new OpenANewCourse(Space, pre, department);
+                    Action<Boolean> newaction = new OpenANewCourse(Space, pre, course);
                     actionsList.add(newaction);
-                    actorIds.add(course);
-                    privateStates.add(new CoursePrivateState());
+                    actorIds.add(department);
+                    privateStates.add(new DepartmentPrivateState());
                 }break;
                 case "Add Student": {
                     String department = action.get("Department").getAsString();
                     String student = action.get("Student").getAsString();
-                    Action<Boolean> newaction = new AddStudent(department);
+                    Action<Boolean> newaction = new AddStudent(student);
                     actionsList.add(newaction);
-                    actorIds.add(student);
-                    privateStates.add(new StudentPrivateState());
+                    actorIds.add(department);
+                    privateStates.add(new DepartmentPrivateState());
                 }break;
                 case "Participate In Course":{
                     String student = action.get("Student").getAsString();
@@ -93,31 +93,31 @@ public class JsonHandler {
                     int grade;
                     if (gradeString.charAt(0)==45)grade=-1;
                     else grade = action.get("Grade").getAsJsonArray().get(0).getAsInt();
-                    Action<Boolean> newaction = new ParticipatingInCourse(course,grade);
-                    actionsList.add(newaction);
-                    actorIds.add(student);
-                    privateStates.add(new StudentPrivateState());
-                }break;
-                case "Unregister":{
-                    String student = action.get("Student").getAsString();
-                    String course = action.get("Course").getAsString();
-                    Action<Boolean> newaction = new Unregister(course);
-                    actionsList.add(newaction);
-                    actorIds.add(student);
-                    privateStates.add(new StudentPrivateState());
-                }break;
-                case "Close Course": {
-                    String department = action.get("Department").getAsString();
-                    String course = action.get("Course").getAsString();
-                    Action<Boolean> newaction = new CloseACourse(department);
+                    Action<Boolean> newaction = new ParticipatingInCourse(student,grade);
                     actionsList.add(newaction);
                     actorIds.add(course);
                     privateStates.add(new CoursePrivateState());
                 }break;
+                case "Unregister":{
+                    String student = action.get("Student").getAsString();
+                    String course = action.get("Course").getAsString();
+                    Action<Boolean> newaction = new Unregister(student);
+                    actionsList.add(newaction);
+                    actorIds.add(course);
+                    privateStates.add(new CoursePrivateState());
+                }break;
+                case "Close Course": {
+                    String department = action.get("Department").getAsString();
+                    String course = action.get("Course").getAsString();
+                    Action<Boolean> newaction = new CloseACourse(course);
+                    actionsList.add(newaction);
+                    actorIds.add(department);
+                    privateStates.add(new DepartmentPrivateState());
+                }break;
                 case "Add Spaces": {
                     String course = action.get("Course").getAsString();
                     int number = action.get("Number").getAsInt();
-                    Action<Boolean> newaction = new OpeningNewPlacesInACourse(number,course);
+                    Action<Boolean> newaction = new OpeningNewPlacesInACourse(number);
                     actionsList.add(newaction);
                     actorIds.add(course);
                     privateStates.add(new CoursePrivateState());

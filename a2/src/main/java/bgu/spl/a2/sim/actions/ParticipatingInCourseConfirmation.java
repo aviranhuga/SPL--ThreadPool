@@ -2,48 +2,39 @@ package bgu.spl.a2.sim.actions;
 
 import bgu.spl.a2.Action;
 import bgu.spl.a2.Promise;
-import bgu.spl.a2.sim.privateStates.CoursePrivateState;
+import bgu.spl.a2.sim.privateStates.StudentPrivateState;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class ParticipatingInCourseConfirmation extends Action<Boolean>{
-
-    private String StudentActorId;
-    private HashMap<String,Integer> StudentGrades;
+public class ParticipatingInCourseConfirmation extends Action<Boolean> {
+    //we are in the Student Actor
+    private String courseActorId;
+    private LinkedList<String> prequisites;
+    private int Grade;
 
     @Override
     protected void start() {
-        CoursePrivateState Course = (CoursePrivateState)this.actorState;
-        Iterator<String> prequisites = ((LinkedList)Course.getPrequisites()).iterator();
-
-        Boolean preCond = true;
-        if(Course.getAvailableSpots().intValue()==-1) {
-            preCond = false;
-    //        System.out.println(this.actorId + " is Closed!");
-        }else if(Course.getAvailableSpots().intValue() <= Course.getRegistered().intValue() ){
-    //        System.out.println("Course: " + this.actorId + " is Full!");
-            preCond=false;
+        HashMap<String, Integer> StudentGrades = ((StudentPrivateState) this.actorState).getGrades();
+        Iterator<String> prequisites = this.prequisites.iterator();
+        while (prequisites.hasNext()) {
+            if (!StudentGrades.containsKey(prequisites.next())) {
+                this.complete(false);
+                return;
+            }//end of if
+        }//end of while
+            ((StudentPrivateState) this.actorState).addGrade(courseActorId,new Integer(Grade));
+            this.complete(true);
         }
-        while (prequisites.hasNext() && preCond){
-            String currentPre = prequisites.next();
-            if(!StudentGrades.containsKey(currentPre)) {
-                preCond = false;
-       //         System.out.println( StudentActorId + " didnt fill the prequisites for " + this.actorId + " he need to take the course " + currentPre);
-            }
+
+        ParticipatingInCourseConfirmation(String courseActorId, LinkedList < String > prequisites, int Grade){
+            this.courseActorId = courseActorId;
+            this.prequisites = prequisites;
+            this.Grade = Grade;
+            this.setActionName("Participating In Course Confirmation");
+            this.Result = new Promise<>();
         }
-        if (preCond==true) Course.addStudents(this.StudentActorId);
 
-        this.complete(preCond);
+
     }
-
-     ParticipatingInCourseConfirmation(String StudentId, HashMap<String,Integer> StudentGrades){
-        this.StudentActorId = StudentId;
-        this.StudentGrades = StudentGrades;
-        this.setActionName("Participating In Course Confirmation");
-        this.Result = new Promise<Boolean>();
-    }
-
-
-}

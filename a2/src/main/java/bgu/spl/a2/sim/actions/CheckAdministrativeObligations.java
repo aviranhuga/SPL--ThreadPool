@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class CheckAdministrativeObligations extends Action<Boolean>{
-
+    //we in the Department Actor
     private LinkedList<String> Students;
     private LinkedList<String> Conditions;
     private String ComputerType;

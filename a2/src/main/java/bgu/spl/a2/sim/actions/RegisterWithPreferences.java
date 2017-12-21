@@ -2,12 +2,13 @@ package bgu.spl.a2.sim.actions;
 
 import bgu.spl.a2.Action;
 import bgu.spl.a2.Promise;
+import bgu.spl.a2.sim.privateStates.CoursePrivateState;
 
 import java.util.LinkedList;
 
 
-public class RegisterWithPreferences extends Action{
-
+public class RegisterWithPreferences extends Action<Boolean>{
+    //we are in the Student Actor
     private LinkedList<String> Preferences;
     private LinkedList<Integer> Grades;
 
@@ -19,9 +20,9 @@ public class RegisterWithPreferences extends Action{
             return;
         }
         LinkedList<Action<Boolean>> actions = new LinkedList<>();
-        Action<Boolean> TryRegForCourse = new ParticipatingInCourse(Preferences.poll(),Grades.poll());
+        Action<Boolean> TryRegForCourse = new ParticipatingInCourse(this.actorId,Grades.poll());
         actions.add(TryRegForCourse);
-        this.sendMessage(TryRegForCourse, this.actorId , this.actorState);
+        this.sendMessage(TryRegForCourse, Preferences.poll(),new CoursePrivateState());
 
         this.then(actions,()->{
             if(actions.poll().getResult().get()) {
@@ -36,7 +37,7 @@ public class RegisterWithPreferences extends Action{
         this.Grades=Grades;
         this.Preferences=Preferences;
         this.setActionName("Register With Preferences");
-        this.Result = new Promise<Boolean>();
+        this.Result = new Promise<>();
     }
 
 }

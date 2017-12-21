@@ -9,18 +9,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Unregister extends Action<Boolean> {
-
-    private String CourseActorId;
+    //we are in the course Actor
+    private String studentActorId;
 
     @Override
     protected void start() {
+        //check if the student is register to the course
+        CoursePrivateState Course = (CoursePrivateState)this.actorState;
+        if(!(Course.getRegStudents().contains(studentActorId))){
+            this.complete(false);
+            return;
+        }
+
         List<Action<Boolean>> actions = new ArrayList<>();
         Action<Boolean> Confirmation = new UnregisterConfirmation(this.actorId);
         actions.add(Confirmation);
-        this.sendMessage(Confirmation, CourseActorId , new CoursePrivateState());
+        this.sendMessage(Confirmation, studentActorId , new StudentPrivateState());
         this.then(actions,()->{
             if(actions.get(0).getResult().get()) {
-                ((StudentPrivateState)this.actorState).removeCourse(this.CourseActorId);
+                Course.removeStudents(studentActorId);
                 this.complete(true);
                 this.actorState.addRecord(getActionName());
            //     System.out.println("Student" + this.actorId + " removed from Course: " + CourseActorId);
@@ -31,10 +38,10 @@ public class Unregister extends Action<Boolean> {
         });
     }
 
-    public Unregister(String CourseId){
-        this.CourseActorId=CourseId;
+    public Unregister(String studentActorId){
+        this.studentActorId=studentActorId;
         this.setActionName("Unregister");
-        this.Result = new Promise<Boolean>();
+        this.Result = new Promise<>();
     }
 
 

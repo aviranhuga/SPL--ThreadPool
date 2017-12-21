@@ -10,21 +10,26 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class OpenANewCourse extends bgu.spl.a2.Action<Boolean>{
-
+    //we are in the Department actor
     private Integer availableSpots;
     private LinkedList<String> prequisites;
-    private String DepartmentActorId;
+    private String courseActorId;
 
     @Override
     protected void start(){
         List<Action<Boolean>> actions = new ArrayList<>();
-        Action<Boolean> Confirmation = new OpenANewCourseConfirmation(this.actorId);
+        Action<Boolean> Confirmation = new OpenANewCourseConfirmation(this.availableSpots,this.prequisites);
         actions.add(Confirmation);
-        this.sendMessage(Confirmation, DepartmentActorId , new DepartmentPrivateState());
+        //Check if the course already exist
+        if (((DepartmentPrivateState)this.actorState).getCourseList().contains(this.courseActorId)) {
+            this.complete(false);
+            return;
+        }
+        //open a new course
+        this.sendMessage(Confirmation, courseActorId , new CoursePrivateState());
         this.then(actions,()->{
             if(actions.get(0).getResult().get()) {
-                ((CoursePrivateState)this.actorState).setPrequisites(this.prequisites);
-                ((CoursePrivateState)this.actorState).setAvailableSpots(this.availableSpots);
+                ((DepartmentPrivateState)this.actorState).addCourse(courseActorId);
                 this.complete(true);
                 this.actorState.addRecord(getActionName());
               //  System.out.println("New Course: " + this.actorId + " add to Department: " + DepartmentActorId);
@@ -36,12 +41,12 @@ public class OpenANewCourse extends bgu.spl.a2.Action<Boolean>{
 
     }
 
-    public OpenANewCourse(Integer availableSpots,LinkedList<String> prequisites, String DepartmentActorId){
+    public OpenANewCourse(Integer availableSpots,LinkedList<String> prequisites, String courseActorId){
         this.ActionName = "Open A New Course";
-        this.Result = new Promise<Boolean>();
+        this.Result = new Promise<>();
         this.availableSpots = availableSpots;
         this.prequisites = prequisites;
-        this.DepartmentActorId = DepartmentActorId;
+        this.courseActorId = courseActorId;
     }
 }
 

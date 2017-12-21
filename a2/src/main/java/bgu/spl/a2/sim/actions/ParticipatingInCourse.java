@@ -6,22 +6,35 @@ import bgu.spl.a2.sim.privateStates.CoursePrivateState;
 import bgu.spl.a2.sim.privateStates.StudentPrivateState;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-public class ParticipatingInCourse extends Action<Boolean> {
 
-    private String CourseActorId;
+public class ParticipatingInCourse extends Action<Boolean> {
+    //we are in the courseActorId
+    private String StudentActorId;
     private int Grade;
 
     @Override
     protected void start() {
+        CoursePrivateState Course = (CoursePrivateState)this.actorState;
+        //check if the course is closed
+        if (Course.getAvailableSpots().intValue() == -1) {
+            this.complete(false);
+            return;
+        }
+        //check if the course has space
+        if (Course.getAvailableSpots().intValue() <= Course.getRegistered().intValue()) {
+            this.complete(false);
+            return;
+        }
         List<Action<Boolean>> actions = new ArrayList<>();
-        Action<Boolean> Confirmation = new ParticipatingInCourseConfirmation(this.actorId,((StudentPrivateState)this.actorState).getGrades());
+        Action<Boolean> Confirmation = new ParticipatingInCourseConfirmation(this.actorId,(LinkedList<String>)Course.getPrequisites(),Grade);
         actions.add(Confirmation);
-        this.sendMessage(Confirmation, CourseActorId , new CoursePrivateState());
+        this.sendMessage(Confirmation, StudentActorId , new StudentPrivateState());
         this.then(actions,()->{
             if(actions.get(0).getResult().get()) {
-                ((StudentPrivateState)this.actorState).addGrade(this.CourseActorId,this.Grade);
+                Course.addStudents(this.StudentActorId);
                 this.complete(true);
                 this.actorState.addRecord(getActionName());
                 //System.out.println("Student: " + this.actorId + " Participating In Course: " + CourseActorId + " Grade: " + Grade);
@@ -32,11 +45,11 @@ public class ParticipatingInCourse extends Action<Boolean> {
         });
     }
 
-    public ParticipatingInCourse(String CourseId, int Grade){
-        this.CourseActorId=CourseId;
+    public ParticipatingInCourse(String StudentActorId, int Grade){
+        this.StudentActorId=StudentActorId;
         this.Grade=Grade;
         this.setActionName("Participating In Course");
-        this.Result = new Promise<Boolean>();
+        this.Result = new Promise<>();
     }
 
 

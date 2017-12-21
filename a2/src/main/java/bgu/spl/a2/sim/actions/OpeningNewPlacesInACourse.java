@@ -1,42 +1,28 @@
 package bgu.spl.a2.sim.actions;
 
-import bgu.spl.a2.Action;
 import bgu.spl.a2.Promise;
 import bgu.spl.a2.sim.privateStates.CoursePrivateState;
-import bgu.spl.a2.sim.privateStates.DepartmentPrivateState;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 public class OpeningNewPlacesInACourse extends bgu.spl.a2.Action<Boolean>{
-
-    private int availableSpots;
-    private String courseName;
+    //we are in the course Actor
+    private int extraAvailableSpots;
 
     @Override
     protected void start(){
-        List<Action<Boolean>> actions = new ArrayList<>();
-        Action<Boolean> Confirmation = new OpeningNewPlacesInACourseConfirmation(this.courseName,this.availableSpots);
-        actions.add(Confirmation);
-        this.sendMessage(Confirmation, courseName , new CoursePrivateState());
-        this.then(actions,()->{
-            if(actions.get(0).getResult().get()) {
-                this.complete(true);
-                this.actorState.addRecord(getActionName());
-                //System.out.println("Added " + availableSpots + " Places in Course: " + courseName);
-            }else {
-                //System.out.println("Open new places in " + courseName + "Failed!");
-                this.complete(false);
-            }
-        });
-
+        CoursePrivateState Course = (CoursePrivateState)this.actorState;
+        //check if the course is closed
+        if ((Course.getAvailableSpots())==-1)
+            this.complete(false);
+        else { //add Spaces
+            Course.setAvailableSpots(Course.getAvailableSpots() + this.extraAvailableSpots);
+            this.complete(true);
+            this.actorState.addRecord(this.ActionName);
+        }
     }
 
-    public OpeningNewPlacesInACourse(int availableSpots,String courseName){
+    public OpeningNewPlacesInACourse(int extraAvailableSpots){
         this.ActionName = "Add Spaces";
-        this.Result = new Promise<Boolean>();
-        this.availableSpots = availableSpots;
-        this.courseName = courseName;
+        this.Result = new Promise<>();
+        this.extraAvailableSpots = extraAvailableSpots;
     }
 }

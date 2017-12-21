@@ -2,27 +2,27 @@ package bgu.spl.a2.sim.actions;
 
 import bgu.spl.a2.Action;
 import bgu.spl.a2.Promise;
-import bgu.spl.a2.sim.privateStates.CoursePrivateState;
+import bgu.spl.a2.sim.privateStates.StudentPrivateState;
 
 public class UnregisterConfirmation extends Action<Boolean>{
-    //The ActorId is the Course we want to delete the Student From
-    private String StudentActorId;
+    //we are in the student actor
+    private String courseActorId;
 
     @Override
     protected void start() {
 
-        CoursePrivateState Course = (CoursePrivateState)this.actorState;
-        if(Course.getRegStudents().contains(StudentActorId)) {
+        StudentPrivateState student = (StudentPrivateState)this.actorState;
+        if(student.getGrades().containsKey(courseActorId)){
+            student.removeCourse(this.courseActorId);
             this.complete(true);
-            Course.removeStudents(StudentActorId);
         }
         else this.complete(false);
     }
 
-    public UnregisterConfirmation(String StudentId){
-        this.StudentActorId = StudentId;
+    public UnregisterConfirmation(String courseActorId){
+        this.courseActorId = courseActorId;
         this.setActionName("Unregister Confirmation");
-        this.Result = new Promise<Boolean>();
+        this.Result = new Promise<>();
     }
 
 
