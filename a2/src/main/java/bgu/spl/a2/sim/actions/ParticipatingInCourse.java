@@ -18,18 +18,13 @@ public class ParticipatingInCourse extends Action<Boolean> {
     @Override
     protected void start() {
         CoursePrivateState Course = (CoursePrivateState)this.actorState;
-        //check if the course is closed
-        if (Course.getAvailableSpots().intValue() == -1) {
+        //check if the course is closed or no places
+        if (Course.getAvailableSpots().intValue() <= 0) {
             this.complete(false);
             this.actorState.addRecord(getActionName());
             return;
         }
-        //check if the course has space
-        if (Course.getAvailableSpots().intValue() <= Course.getRegistered().intValue()) {
-            this.complete(false);
-            this.actorState.addRecord(getActionName());
-            return;
-        }
+
         List<Action<Boolean>> actions = new ArrayList<>();
         Action<Boolean> Confirmation = new ParticipatingInCourseConfirmation(this.actorId,(LinkedList<String>)Course.getPrequisites(),Grade);
         actions.add(Confirmation);
