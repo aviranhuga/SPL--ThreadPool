@@ -56,7 +56,7 @@ public class JsonHandler {
         return this.warehouse;
     }
     /**
-     * This function build a ActorThreadPool with n threads (n is from the json file)
+     * this function build a ActorThreadPool with n threads (n is from the json file)
      * @return  ActorThreadPool
      */
     public ActorThreadPool buildActorThreadPool(){
