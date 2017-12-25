@@ -21,7 +21,7 @@ public class Promise<T>{
 
 	private T result;
 	private Boolean isResolved = false;
-	private ConcurrentLinkedQueue<callback> CallQueue = new ConcurrentLinkedQueue();
+	private ConcurrentLinkedQueue<callback> CallQueue = new ConcurrentLinkedQueue<>();
 	/**
 	 *
 	 * @return the resolved value if such exists (i.e., if this object has been

@@ -18,7 +18,7 @@ public class SimulatorTest {
 
     @Test
     public void main() {
-        for (int i = 0; i <= 1000000; i++) {
+        for (int i = 0; i <= 100000; i++) {
             Simulator.main(new String[]{"C:\\Users\\avira\\Desktop\\SPL-Assinment2\\test.json"});
             try (InputStream fin = new FileInputStream("C:\\Users\\avira\\Desktop\\SPL-Assinment2\\a2\\result.ser");
                  ObjectInputStream ois = new ObjectInputStream(fin)) {

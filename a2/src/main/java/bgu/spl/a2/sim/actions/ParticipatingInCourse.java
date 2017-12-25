@@ -18,6 +18,11 @@ public class ParticipatingInCourse extends Action<Boolean> {
     @Override
     protected void start() {
         CoursePrivateState Course = (CoursePrivateState)this.actorState;
+        //if the student is already registered
+        if((Course.getRegStudents().contains(StudentActorId)))
+            this.sendMessage(this, this.actorId , this.actorState);
+
+
         //check if the course is closed or no places
         if (Course.getAvailableSpots().intValue() <= 0) {
             this.complete(false);

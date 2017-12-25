@@ -17,7 +17,9 @@ import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-
+/**
+ * this class parse and handle the Json file
+ */
 public class JsonHandler {
 
     private String path;
@@ -35,7 +37,10 @@ public class JsonHandler {
             System.out.println("File didn't found in : " + path);
         }
     }
-
+    /**
+     * This function build a warehouse with the computers from the json file
+     * @return  Warehouse
+     */
     public Warehouse buildWarehouse(){
         JsonArray ComputerArray = this.jsonObject.getAsJsonArray("Computers");
         HashMap<String,Computer> computers = new HashMap<>();
@@ -50,12 +55,19 @@ public class JsonHandler {
         this.warehouse = new Warehouse(computers);
         return this.warehouse;
     }
-
+    /**
+     * This function build a ActorThreadPool with n threads (n is from the json file)
+     * @return  ActorThreadPool
+     */
     public ActorThreadPool buildActorThreadPool(){
         int Threads = jsonObject.get("threads").getAsInt();
         return new ActorThreadPool(Threads);
     }
-
+    /**
+     * This function parse the json file and return an ActionsList
+     * @param PhaseName the name of the phase
+     * @return  ActionsList
+     */
     public ActionsList phaseActions(String PhaseName){
         JsonArray actions = jsonObject.getAsJsonArray(PhaseName);
         LinkedList<Action<?>> actionsList = new LinkedList<>();

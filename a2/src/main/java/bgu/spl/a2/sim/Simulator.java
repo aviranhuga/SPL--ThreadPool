@@ -32,7 +32,7 @@ public class Simulator {
 		jsonHandler.buildWarehouse();
 		actorThreadPool.start();
 
-		System.out.println("___________Phase 1 Starting_________");
+		//Starting Phase 1
 		ActionsList actions = jsonHandler.phaseActions("Phase 1");
 		CountDownLatch phase1 = new CountDownLatch(actions.getSize());
 		while(!actions.isEmpty()) {
@@ -40,11 +40,10 @@ public class Simulator {
 			actorThreadPool.submit(nextAction, actions.getNextAcorId(), actions.getNextPrivatestate());
 			nextAction.getResult().subscribe(() -> phase1.countDown());
 		}
-		try {
+		try {//Wait for phase 1 actions to finish
 			phase1.await();
 		} catch (InterruptedException e) {}
-
-		System.out.println("___________Phase 2 Starting_________");
+		//Starting Phase 2
 		actions = jsonHandler.phaseActions("Phase 2");
 		CountDownLatch phase2 = new CountDownLatch(actions.getSize());
 		while(!actions.isEmpty()) {
@@ -52,11 +51,10 @@ public class Simulator {
 			actorThreadPool.submit(nextAction, actions.getNextAcorId(), actions.getNextPrivatestate());
 			nextAction.getResult().subscribe(() -> phase2.countDown());
 		}
-		try {
+		try {//Wait for phase 2 actions to finish
 			phase2.await();
 		} catch (InterruptedException e) {}
-
-		System.out.println("___________Phase 3 Starting_________");
+		//Starting Phase 3
 		actions = jsonHandler.phaseActions("Phase 3");
 		CountDownLatch phase3 = new CountDownLatch(actions.getSize());
 		while(!actions.isEmpty()) {
@@ -64,12 +62,10 @@ public class Simulator {
 			actorThreadPool.submit(nextAction, actions.getNextAcorId(), actions.getNextPrivatestate());
 			nextAction.getResult().subscribe(() -> phase3.countDown());
 		}
-		try {
+		try {//Wait for phase 3 actions to finish
 			phase3.await();
 		} catch (InterruptedException e) {}
-
-
-		System.out.println("__________________end_______________");
+		//end of start
 		end();
 	}
 	
@@ -108,8 +104,8 @@ public class Simulator {
 	
 	
 	public static void main(String [] args) {
-		//String Path = "C:\\Users\\avira\\Desktop\\SPL-Assinment2\\test.json";
 			jsonHandler = new JsonHandler(args[0]);
+			//built thread pool
 			attachActorThreadPool(jsonHandler.buildActorThreadPool());
 			start();
 	}

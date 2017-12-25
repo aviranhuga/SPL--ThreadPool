@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class ActorThreadPool {
 
-	private ConcurrentHashMap<String,ConcurrentLinkedQueue> actors;
+	private ConcurrentHashMap<String,ConcurrentLinkedQueue<Action<?>>> actors;
 	private ConcurrentHashMap<String,PrivateState> privatestate;
 	private ConcurrentHashMap<String,Boolean> availableActor;
 	private final int nthreads;
@@ -80,7 +80,7 @@ public class ActorThreadPool {
 		if(!actors.containsKey(actorId)) { // The actor don't have a Queue
 			synchronized (actors) {
 				if(!actors.containsKey(actorId)) {
-					ConcurrentLinkedQueue<Action<?>> actorQueue = new ConcurrentLinkedQueue<>();
+					ConcurrentLinkedQueue<Action<?>> actorQueue = new ConcurrentLinkedQueue<Action<?>>();
 					actors.put(actorId, actorQueue);
 					availableActor.put(actorId, true);
 					privatestate.put(actorId, actorState);
